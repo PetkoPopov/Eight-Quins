@@ -1,0 +1,13 @@
+body {
+background-color: darkkhaki;
+}
+td{
+    border:solid green 2px;
+    width:35px;
+    height:35px;
+    text-align: center ;
+    font-size: xx-large;
+}
+table{
+    border: solid black 5px;
+}
