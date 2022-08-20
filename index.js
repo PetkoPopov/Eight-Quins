@@ -88,6 +88,17 @@ let hlp=[]
  })
  global_obj.global_arrs.push(hlp)
 }
+function setGlobalArr(){
+    global_arr=[]
+    if(step>0){global_obj.global_arrs[step-1].forEach(e=>{
+        let q = new Quin(e.val,e.numBox,e.color)
+        global_arr.push(q)
+     })
+    }else if(step <= 0  ){
+        
+      make_global_arr()
+     }
+}
 function showTable(){
 
     var tr = document.createElement("tr")
@@ -126,8 +137,9 @@ filter.push(e.numBox)
 }
 global_obj.filters.push(filter)
 
-caller(filter[0])
 addGlobalArr()
+caller(filter[0])
+
 
 showTable()
 }  
@@ -135,18 +147,17 @@ showTable()
 function stepBack(){
     step--
     global_obj.global_arrs.pop()
-    global_arr=[]
-    global_obj.global_arrs[step-1].forEach(e=>{
-       let q = new Quin(e.val,e.numBox,e.color)
-       global_arr.push(q)
-    })
+
+    setGlobalArr()
+    
+    // console.log(global_arr)
 
 global_obj.filters[global_obj.filters.length-1].shift()
 showTable()
 setTimeout(()=>{
 
 stepForward(true)
-},2000
+},700
 )
 }
 
@@ -155,3 +166,42 @@ function caller(n){
     getHorisont(n)
     getVertical(n)
 }
+
+
+
+function main(){
+    console.log('your are in main')
+let y = 0 
+    while(y!= 1000 ){
+    
+    setTimeout(()=>{
+        stepForward()
+    
+    },500)
+      
+       let f = global_obj.filters[step-1].filter((q)=>{return q.color =='yellow'})
+       if(f.length =0 ){
+        stepBack()
+       }else if(step == 8){
+        break
+       }
+if(y == 10 ){
+    
+}
+y++    
+}
+    
+}
+
+/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+let button_main = document.createElement('button')         ////////
+button_main.setAttribute('id','start_gamme')                  ///////
+button_main.innerHTML = 'START GAME'                          ///////
+button_main.addEventListener('click',()=>{                    ///////
+    main()                                                   ///////
+})                                                          ///////
+let body = document.getElementsByTagName('body')[0]        ///////
+body.appendChild(button_main)                             ///////
+///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
