@@ -1,40 +1,19 @@
 
 var global_arr=[]
-
-function showTable(arr){
-
-    var tr = document.createElement("tr")
-    var table = document.getElementById('my_table')
-    
-    for(i=0 ; i <64;i++){
-     td =document.createElement("td")
-     
-     td.style.backgroundColor=arr[i].color
-     td.innerHTML = arr[i].val
-     
-    tr.appendChild(td)
-    
-    
-    if(i%8 == 7){
-    table.appendChild(tr)
-    
-    tr=document.createElement('tr')
+var step = 0 
+class Quin{
+    constructor(val,numBox,color){
+        this.val= val;
+        this.numBox=numBox;
+        this.color=color
     }
-    
-    }//end for
-    
-    }//end function
-    
+}
 function make_global_arr(){
 for(i=0 ;i<64;i++){
     if(i<10){
         i= i+' '
     }
-    let quin = {
-     val: ' ' ,
-     numBox:Number(i),
-     color:'yellow'
-    }
+    let quin = new Quin(' ',Number(i),'yellow')
     global_arr.push(quin)
 }
 }
@@ -72,7 +51,7 @@ function getVertical(key){
        
         global_arr[upLeft].color='red'
         upLeft-=9
-        if( upLeft%8 == 0 && upLeft>0){
+        if( upLeft%8 == 0 && upLeft>=0){
             global_arr[upLeft].color='red'
             break
         }
@@ -91,70 +70,85 @@ while(downLeft<63){
     downLeft+=7
 }
 
-}
+}//end function
 
-let n=53
-///////////////////////////////
-make_global_arr()   ///// //// 
-//////////////////////////////
+make_global_arr()
 
-
-global_obj ={
-    step:0,
-    global_arr:[],
+var  global_obj ={
+    global_arrs:[],
     quin_position:[],
     filters:[]
 
 }
-var filter
-var new_filter
-function stepForward(){ 
-if(global_obj.filters.length == 0){
-    filter  = global_arr.filter((e)=>{
-    return e.color == 'yellow'
-   })
-   global_obj.filters.push(filter)
-
-}
-filter = global_obj.filters[global_obj.step]
-let index = filter[0].numBox
-    caller(Number(filter[0].numBox))// change global_arr
-    
-     let arr = []
-     
-     global_arr.forEach(e=>{
-        arr.push({
-            val:e.val,
-            numBox:e.numBox,
-            color:e.color,
-            
-        })
-     })
-      new_filter  = global_arr.filter(e=>{
-        return e.color == 'yellow'
-       })
-    global_obj.step++
-    // global_obj.step++
-    global_obj.global_arr.push(arr)
-    global_obj.quin_position.push(index)
-    global_obj.filters.push(new_filter)
-     
-
-showTable(global_arr)
-
-}
-
-function setGlobalArr(){
- global_arr.splice(0,global_arr.length)
- console.log(global_arr)
- global_obj.global_arr.pop()
- global_obj.global_arr.forEach(e=>{
-    global_arr.push(e)
+function addGlobalArr(){
+let hlp=[]
+ global_arr.forEach(e=>{
+    let r = new Quin(e.val,e.numBox,e.color)
+    hlp.push(r)
  })
- global_obj.step--
- global_obj.quin_position.pop()
+ global_obj.global_arrs.push(hlp)
 }
+function showTable(){
 
+    var tr = document.createElement("tr")
+    var table = document.getElementById('my_table')
+    
+    for(i=0 ; i <64;i++){
+    let  td =document.createElement("td")
+     td.style.backgroundColor=global_arr[i].color
+     
+    
+     td.innerHTML = global_arr[i].val   
+    tr.appendChild(td)
+    
+    
+    if(i%8 == 7){
+    table.appendChild(tr)
+    
+    tr=document.createElement('tr')
+    }
+    
+    }//end for
+    
+    }//end function
+    
+function stepForward(s){ 
+let filter=[]
+step++
+ if(s==true){
+    filter = global_obj.filters[/*LAST INDEX */ global_obj.filters.length-1]
+}else {
+    global_arr.forEach(e=>{
+    if(e.color == 'yellow'){
+filter.push(e.numBox)
+    }
+})
+}
+global_obj.filters.push(filter)
+
+caller(filter[0])
+addGlobalArr()
+
+showTable()
+}  
+
+function stepBack(){
+    step--
+    global_obj.global_arrs.pop()
+    global_arr=[]
+    global_obj.global_arrs[step-1].forEach(e=>{
+       let q = new Quin(e.val,e.numBox,e.color)
+       global_arr.push(q)
+    })
+
+global_obj.filters[global_obj.filters.length-1].shift()
+showTable()
+setTimeout(()=>{
+
+stepForward(true)
+},2000
+)
+}
 
 function caller(n){
     getDiagonals(n)

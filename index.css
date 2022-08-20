@@ -11,3 +11,11 @@ td{
 table{
     border: solid black 5px;
 }
+button{
+    width:100px;
+    height: 60px;
+    background-color: yellowgreen;
+    border: 2px;
+    border-color: blue;
+    box-shadow: 6px;
+}
