@@ -109,7 +109,7 @@ function showTable(){
      td.style.backgroundColor=global_arr[i].color
      
     
-     td.innerHTML = global_arr[i].val   
+     td.innerHTML = global_arr[i].val+'<small>'+global_arr[i].numBox+'</small>'   
     tr.appendChild(td)
     
     
@@ -122,43 +122,50 @@ function showTable(){
     }//end for
     
     }//end function
-    
+    ///////////////////////////////
+    //////////////////////////////////
+
 function stepForward(s){ 
 let filter=[]
-step++
+
  if(s==true){
-    filter = global_obj.filters[/*LAST INDEX */ global_obj.filters.length-1]
+    filter = global_obj.filters[/* LAST INDEX */ global_obj.filters.length-1]
+    if(filter.length == 0){
+        global_obj.filters.pop()
+        stepBack()
+    }
 }else {
     global_arr.forEach(e=>{
     if(e.color == 'yellow'){
-filter.push(e.numBox)
-    }
-})
-}
+      filter.push(e.numBox)
+       }
+     })
+     step++
 global_obj.filters.push(filter)
+}
 
-addGlobalArr()
 caller(filter[0])
-
-
+quin_pos = filter[0]
+global_obj.quin_position.push(quin_pos)
+addGlobalArr()
 showTable()
-}  
 
+}  
+//////////////////////////////////////////////
+////////////////////////////////////////
 function stepBack(){
     step--
+   
+   global_obj.quin_position.pop()
     global_obj.global_arrs.pop()
-
     setGlobalArr()
     
-    // console.log(global_arr)
-
+// global_obj.filters.pop()
 global_obj.filters[global_obj.filters.length-1].shift()
-showTable()
-setTimeout(()=>{
 
+showTable()
 stepForward(true)
-},700
-)
+
 }
 
 function caller(n){
@@ -170,25 +177,30 @@ function caller(n){
 
 
 function main(){
-    console.log('your are in main')
+     console.log('your are in main')
 let y = 0 
-    while(y!= 1000 ){
+    while(y<= 2000 ){
     
-    setTimeout(()=>{
-        stepForward()
-    
-    },500)
-      
-       let f = global_obj.filters[step-1].filter((q)=>{return q.color =='yellow'})
-       if(f.length =0 ){
-        stepBack()
-       }else if(step == 8){
-        break
-       }
-if(y == 10 ){
-    
+console.log(y)
+if(y==0 ){
+    stepForward()
 }
-y++    
+
+            let f = global_obj.filters[step-1].filter((q)=>{return q.color =='yellow'})
+            if(f.length == 0 ){
+             stepBack()///
+            }else{
+              stepForward()
+            }
+          
+          if(y%100 == 0 ){
+            showTable()
+          }
+    
+    
+    if(global_obj.quin_position.length == 8){
+        break
+    }
 }
     
 }
@@ -199,7 +211,9 @@ let button_main = document.createElement('button')         ////////
 button_main.setAttribute('id','start_gamme')                  ///////
 button_main.innerHTML = 'START GAME'                          ///////
 button_main.addEventListener('click',()=>{                    ///////
-    main()                                                   ///////
+    main()                         
+    button_main.innerHTML = 'Game is ON'     
+    button_main.style.backgroundColor='red'                     ///////
 })                                                          ///////
 let body = document.getElementsByTagName('body')[0]        ///////
 body.appendChild(button_main)                             ///////

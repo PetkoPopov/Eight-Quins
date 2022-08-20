@@ -19,3 +19,11 @@ button{
     border-color: blue;
     box-shadow: 6px;
 }
+#div{
+    font-size: xx-large;
+}
+small{
+ text-align: right;
+ 
+ font-size: small;
+}
